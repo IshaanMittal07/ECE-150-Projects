@@ -1,6 +1,9 @@
 #include <iostream>
 #include <cassert>
 
+int main(); 
+
+
 // helper function for geomteric method
 double power(double base, int exp)
 {
@@ -53,11 +56,12 @@ double *cross_correlation(double array0[], std::size_t cap0, double array1[], st
     return dynamicArray;
 }
 
-std::size_t shift_duplicates(int array[], std::size_t capacity)
+void shift_duplicates(int array[], std::size_t capacity)
 {
     int unique = 0; 
+    int dup = capacity;  
     
-    for (std::size_t i = 0; i < capacity; ++i) {
+    for (std::size_t i = 0; i < dup; ++i) {
         bool repeat = false; 
 
         for (std::size_t j = 0; j < unique; ++j) {
@@ -68,13 +72,24 @@ std::size_t shift_duplicates(int array[], std::size_t capacity)
         }
 
         if (repeat == false) {
-            array[unique] = array[i]; 
+            if (unique != i) {
+                array[unique]= array[i]; 
+            }
             unique++; 
+        }
 
+        else {
+            for (std::size_t k = i + 1; k < dup; ++k) {
+                array[k-1] = array[k]; 
+            }
+            dup--; 
+            i--; 
         }
     }
 
-    return unique; 
+    for (std::size_t i = 0; i < capacity; ++i) {
+        std::cout << array[i] << std::endl; 
+    }
     
 }
 
@@ -97,4 +112,9 @@ void deallocate(double *&ptr, bool is_array, std::size_t capacity = 0)
         delete ptr; // deallocate single instance
         ptr = nullptr;
     }
+}
+
+int main() {
+    int array[20] = {8862, 8862, 5493, 7739, 2059, 4364, 6696, 973, 3297, 5514, 7823, 2183, 4489, 6734, 1095, 3386, 5671, 7992, 2268, 4506}; 
+    shift_duplicates(array, 20); 
 }
