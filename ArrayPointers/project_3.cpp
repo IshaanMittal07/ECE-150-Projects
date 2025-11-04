@@ -1,14 +1,12 @@
 #include <iostream>
 #include <cassert>
 
-int main();
-
 // helper function for geomteric method
 double power(double base, int exp)
 {
     double val = 1.0;
 
-    for (double i = 0; i < exp; ++i)
+    for (int i = 0; i < exp; ++i)
     {
         val *= base;
     }
@@ -39,11 +37,6 @@ double *geometric(double a, double ratio, std::size_t cap)
     return dynamicArray;
 }
 
-int main()
-{
-    std::cout << *geometric(2, 2, 3);
-}
-
 double *cross_correlation(double array0[], std::size_t cap0, double array1[], std::size_t cap1)
 {
     assert((cap0 + cap1) >= 1);
@@ -64,12 +57,13 @@ std::size_t shift_duplicates(int array[], std::size_t capacity)
 {
     int unique = 0; 
     
-    for (int i = 0; i < capacity; ++i) {
+    for (std::size_t i = 0; i < capacity; ++i) {
         bool repeat = false; 
 
-        for (int j = 0; j < unique; ++j) {
+        for (std::size_t j = 0; j < unique; ++j) {
             if (array[i] == array[j]) {
                 repeat = true; 
+                break; 
             }
         }
 
