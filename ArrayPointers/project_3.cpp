@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cassert>
 
+int main(); 
 // helper function for geomteric method
 double power(double base, int exp)
 {
@@ -55,13 +56,14 @@ double *cross_correlation(double array0[], std::size_t cap0, double array1[], st
 
 std::size_t shift_duplicates(int array[], std::size_t capacity)
 {
-    int unique = 0; 
-    int dup = capacity;  
+    int *tempArr = new int[capacity](); // initalize all elements to 0
+    std::size_t unique = 0; 
+    std::size_t dup = capacity - 1;  
     
-    for (std::size_t i = 0; i < dup; ++i) {
+    for (std::size_t i = 0; i < capacity; ++i) {
         bool repeat = false; 
 
-        for (std::size_t j = 0; j < unique; ++j) {
+        for (std::size_t j = 0; j < i; ++j) {
             if (array[i] == array[j]) {
                 repeat = true; 
                 break; 
@@ -69,25 +71,26 @@ std::size_t shift_duplicates(int array[], std::size_t capacity)
         }
 
         if (repeat == false) {
-            if (unique != i) {
-                array[unique]= array[i]; 
-            }
+            tempArr[unique] = array[i];
             unique++; 
         }
 
         else {
-            for (std::size_t k = i + 1; k < dup; ++k) {
-                array[k-1] = array[k]; 
-            }
+            tempArr[dup] = array[i];
             dup--; 
-            i--; 
         }
     }
+
+    for (std::size_t i = 0; i < capacity; ++i) {
+        array[i] = tempArr[i];  
+    }
+
+    delete[] tempArr; 
+    tempArr = nullptr; 
 
     return unique; 
     
 }
-     
 
 void deallocate(double *&ptr, bool is_array, std::size_t capacity = 0)
 {
@@ -111,3 +114,7 @@ void deallocate(double *&ptr, bool is_array, std::size_t capacity = 0)
 }
 
 
+int main() {
+    int array[] {1,2,3,2}; 
+    std::cout << shift_duplicates(array, 4) << std::endl; 
+}
