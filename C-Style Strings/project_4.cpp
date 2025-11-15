@@ -51,14 +51,27 @@ int compare(char const *str1, char const *str2)
 
     }
     
-   
+}
+
+void assign(char *str1, char const *str2) {
+    int i = 0; 
+    while (str2[i] != '\0') {
+
+        str1[i] = str2[i]; 
+        ++i;  
+    }
+
+    str1[i] = '\0';  //null characetr 
+
 }
 int main()
 {
-    char myString[] = "cat"; 
-    char myString2[] = "dat"; 
+    char myString[] = "test"; 
+    char myString2[] = "test2"; 
+
+    assign(myString, myString2); 
     
 
 
-    std::cout << compare(myString, myString2) << std::endl;
+    std::cout << myString << std::endl;
 }
