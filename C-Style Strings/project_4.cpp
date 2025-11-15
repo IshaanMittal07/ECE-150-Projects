@@ -64,8 +64,37 @@ void assign(char *str1, char const *str2) {
     str1[i] = '\0';  //null characetr 
 
 }
+
+unsigned int distance( char const *str1, char const *str2) {
+    if (str1 == "") {
+        return length(str2); 
+    } 
+
+    else if(str1[0] == str2[0]) {
+        distance(str1 + 1, str2 + 1); 
+    }
+
+    else if (str1[0] != str2[0]) {
+
+    }
+    else {
+        return length(str1); 
+    }
+
+
+    int i = 0; 
+
+    
+
+}
+
+
 int main()
 {
+
+    //Notes: 
+    //Lets say we had char *str1 = brake and char *str2 = str1 +1 
+    //Then eveyrtime u print str2 u would get an output of rake (becuase the pointer will point to the second character 'r')
     char myString[] = "test"; 
     char myString2[] = "test2"; 
 
