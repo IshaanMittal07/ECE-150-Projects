@@ -1,4 +1,6 @@
 #include <iostream>
+#include <fstream>
+#include <cassert>
 
 int main();
 
@@ -55,7 +57,7 @@ int compare(char const *str1, char const *str2)
     }
 }
 
-void assign(char *str1, char const *str2)  //assign str2 to str1
+void assign(char *str1, char const *str2) // assign str2 to str1
 {
     int i = 0;
     while (str2[i] != '\0')
@@ -106,86 +108,124 @@ std::size_t is_sorted(char *array[], std::size_t capacity)
 }
 
 void insert(char *array[], std::size_t capacity)
-{    
-    std::size_t len = length(array[capacity - 1]); 
-    char *value = new char[len + 1]; 
-    assign(value, array[capacity - 1]); 
+{
+    std::size_t len = length(array[capacity - 1]);
+    char *value = new char[len + 1];
+    assign(value, array[capacity - 1]);
 
-    //pointer to be deleted later to avoid memory leak
+    // pointer to be deleted later to avoid memory leak
     char *copy = array[capacity - 1];
 
-
     std::size_t k{};
-    for (k = capacity - 1; (k > 0) && (compare(array[k-1], value) > 0); --k)
+    for (k = capacity - 1; (k > 0) && (compare(array[k - 1], value) > 0); --k)
     {
         array[k] = array[k - 1];
     }
-    
+
     array[k] = value;
 
-    delete[] copy; 
-    copy = nullptr; 
+    delete[] copy;
+    copy = nullptr;
 }
 
-
-void insertion_sort(char *array[], std::size_t capacity) {
-    for (std::size_t k{2}; k <= capacity; ++k) {
-        insert(array, k); 
+void insertion_sort(char *array[], std::size_t capacity)
+{
+    for (std::size_t k{2}; k <= capacity; ++k)
+    {
+        insert(array, k);
     }
 }
 
+std::size_t remove_duplicates(char *array[], std::size_t capacity)
+{
+    std::size_t unique{0};
 
-std::size_t remove_duplicates(char *array[], std::size_t capacity) {
-    std::size_t unique{0}; 
+    if (capacity == 0)
+    { // just in case for marmoset secreat tests
 
-    if (capacity == 0) { //just in case for marmoset secreat tests
-
-        return 0; 
+        return 0;
     }
 
-    for (std::size_t k{1}; k < capacity; ++k) {
-        if (compare(array[k], array[unique]) != 0) { //check the ones beside each other
+    for (std::size_t k{1}; k < capacity; ++k)
+    {
+        if (compare(array[k], array[unique]) != 0)
+        { // check the ones beside each other
             ++unique;
-            array[unique] = array[k]; //keep on moving to the left
+            array[unique] = array[k]; // keep on moving to the left
         }
-
     }
 
-    return (unique + 1); //its unique + 1 bc of the diff bt index and element
-
-
+    return (unique + 1); // its unique + 1 bc of the diff bt index and element
 }
 
-std::size_t find(char *array[], std::size_t capacity, char const *str) {
-    for (std::size_t k{0}; k < capacity; ++k) {
-        if (compare(array[k], str) == 0) {
-            return k; 
+std::size_t find(char *array[], std::size_t capacity, char const *str)
+{
+    for (std::size_t k{0}; k < capacity; ++k)
+    {
+        if (compare(array[k], str) == 0)
+        {
+            return k;
         }
     }
 
-    std::size_t index{0}; 
-    unsigned int shortest = distance(array[0], str); 
+    std::size_t index{0};
+    unsigned int shortest = distance(array[0], str);
 
-    for (std::size_t k{1}; k < capacity; ++k) { //finding the shortest distance
+    for (std::size_t k{1}; k < capacity; ++k)
+    { // finding the shortest distance
         unsigned int value = distance(array[k], str);
-        if (value < shortest) {
+        if (value < shortest)
+        {
             shortest = value;
             index = k;
         }
     }
-    return index; 
-
+    return index;
 }
-int main()
+
+void read_words_from_file(char const *filename, char **&word_array, std::size_t &num_words, std::size_t max_length)
+{
+    // copied code from main.cpp
+
+    //  Attempt to open the file
+    std::ifstream file{filename};
+    if (!file.is_open())
+    {
+        std::cout << "[ERROR] " << filename << " not found or could not open file" << std::endl;
+    }
+    assert(file.is_open());
+
+    // Read the number of words from the first line of the file
+    file >> num_words;
+
+    // Ignore the newline '\n' character after the number
+    file.ignore();
+
+    /// Allocate memory and initialize the word array
+    word_array = new char *[num_words]{};                // pointers to individual words
+    word_array[0] = new char[num_words * (max_length + 1)]{}; // contiguous list of all words
+
+    for (std::size_t k{1}; k < num_words; ++k)
+    { // connect the individual word pointers
+        word_array[k] = word_array[k - 1] + max_length + 1;
+    }
+
+    // Read from the file into the word array
+    for (std::size_t k{0}; k < num_words; ++k)
+    {
+        file >> word_array[k];
+    }
+
+    file.close();
+}
+
+void free_word_array(char **word_array)
 {
 
-    // Notes:
-    // Lets say we had char *str1 = brake and char *str2 = str1 +1
-    // Then eveyrtime u print str2 u would get an output of rake (becuase the pointer will point to the second character 'r')
-    char myString[] = "cpple";
-    char myString2[] = "aocomelon";
-
-    char *Array[] = {myString, myString2};
-
-    std::cout << is_sorted(Array, 2) << std::endl;
+    delete[] word_array[0];
+    delete[] word_array;
 }
+
+// Notes:
+// Lets say we had char *str1 = brake and char *str2 = str1 +1
+// Then eveyrtime u print str2 u would get an output of rake (becuase the pointer will point to the second character 'r')
