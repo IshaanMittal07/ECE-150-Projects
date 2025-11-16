@@ -127,6 +127,13 @@ void insert(char *array[], std::size_t capacity)
     copy = nullptr; 
 }
 
+
+void insertion_sort(char *array[], std::size_t capacity) {
+    for (std::size_t k{2}; k <= capacity; ++k) {
+        insert(array, k); 
+    }
+}
+
 int main()
 {
 
