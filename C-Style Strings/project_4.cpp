@@ -134,6 +134,28 @@ void insertion_sort(char *array[], std::size_t capacity) {
     }
 }
 
+
+std::size_t remove_duplicates(char *array[], std::size_t capacity) {
+    std::size_t unique{0}; 
+
+    if (capacity == 0) { //just in case for marmoset secreat tests
+
+        return 0; 
+    }
+
+    for (std::size_t k{1}; k < capacity; ++k) {
+        if (compare(array[k], array[unique]) != 0) { //check the ones beside each other
+            ++unique;
+            array[unique] = array[k]; //keep on moving to the left
+        }
+
+    }
+
+    return (unique + 1); //its unique + 1 bc of the diff bt index and element
+
+
+}
+
 int main()
 {
 
