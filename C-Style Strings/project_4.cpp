@@ -89,8 +89,20 @@ unsigned int distance(char const *str1, char const *str2)
     {
         return (1 + std::min(
                         distance(str1 + 1, str2 + 1),
-                        std::min(distance(str1 + 1, str2), distance(str1, str2 + 1)))); //do this since you can only compare two args in std::min()
+                        std::min(distance(str1 + 1, str2), distance(str1, str2 + 1)))); // do this since you can only compare two args in std::min()
     }
+}
+
+std::size_t is_sorted(char *array[], std::size_t capacity)
+{
+    for (std::size_t k{0}; k < capacity - 1; ++k)
+    {
+        if (compare(array[k], array[k + 1]) > 0) //since they are pointers I have to use the compare method, otherwise I wouldve been comparing memory addresses
+        {
+            return k + 1;
+        }
+    }
+    return capacity;
 }
 
 int main()
@@ -99,10 +111,13 @@ int main()
     // Notes:
     // Lets say we had char *str1 = brake and char *str2 = str1 +1
     // Then eveyrtime u print str2 u would get an output of rake (becuase the pointer will point to the second character 'r')
-    char myString[] = "test";
-    char myString2[] = "test2";
+    char myString[]  = "cpple";
+    char myString2[] = "aocomelon";
 
-    assign(myString, myString2);
 
-    std::cout << myString << std::endl;
+    char *Array[] = {myString, myString2}; 
+
+    
+
+    std::cout << is_sorted(Array, 2) << std::endl;
 }
