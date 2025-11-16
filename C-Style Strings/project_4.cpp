@@ -156,6 +156,26 @@ std::size_t remove_duplicates(char *array[], std::size_t capacity) {
 
 }
 
+std::size_t find(char *array[], std::size_t capacity, char const *str) {
+    for (std::size_t k{0}; k < capacity; ++k) {
+        if (compare(array[k], str) == 0) {
+            return k; 
+        }
+    }
+
+    std::size_t index{0}; 
+    unsigned int shortest = distance(array[0], str); 
+
+    for (std::size_t k{1}; k < capacity; ++k) { //finding the shortest distance
+        unsigned int value = distance(array[k], str);
+        if (value < shortest) {
+            shortest = value;
+            index = k;
+        }
+    }
+    return index; 
+
+}
 int main()
 {
 
