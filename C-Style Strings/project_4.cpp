@@ -55,7 +55,7 @@ int compare(char const *str1, char const *str2)
     }
 }
 
-void assign(char *str1, char const *str2)
+void assign(char *str1, char const *str2)  //assign str2 to str1
 {
     int i = 0;
     while (str2[i] != '\0')
@@ -97,12 +97,34 @@ std::size_t is_sorted(char *array[], std::size_t capacity)
 {
     for (std::size_t k{0}; k < capacity - 1; ++k)
     {
-        if (compare(array[k], array[k + 1]) > 0) //since they are pointers I have to use the compare method, otherwise I wouldve been comparing memory addresses
+        if (compare(array[k], array[k + 1]) > 0) // since they are pointers I have to use the compare method, otherwise I wouldve been comparing memory addresses
         {
             return k + 1;
         }
     }
     return capacity;
+}
+
+void insert(char *array[], std::size_t capacity)
+{    
+    std::size_t len = length(array[capacity - 1]); 
+    char *value = new char[len + 1]; 
+    assign(value, array[capacity - 1]); 
+
+    //pointer to be deleted later to avoid memory leak
+    char *copy = array[capacity - 1];
+
+
+    std::size_t k{};
+    for (k = capacity - 1; (k > 0) && (compare(array[k-1], value) > 0); --k)
+    {
+        array[k] = array[k - 1];
+    }
+    
+    array[k] = value;
+
+    delete[] copy; 
+    copy = nullptr; 
 }
 
 int main()
@@ -111,13 +133,10 @@ int main()
     // Notes:
     // Lets say we had char *str1 = brake and char *str2 = str1 +1
     // Then eveyrtime u print str2 u would get an output of rake (becuase the pointer will point to the second character 'r')
-    char myString[]  = "cpple";
+    char myString[] = "cpple";
     char myString2[] = "aocomelon";
 
-
-    char *Array[] = {myString, myString2}; 
-
-    
+    char *Array[] = {myString, myString2};
 
     std::cout << is_sorted(Array, 2) << std::endl;
 }
