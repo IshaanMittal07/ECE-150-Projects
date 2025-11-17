@@ -110,7 +110,6 @@ std::size_t is_sorted(char *array[], std::size_t capacity)
 
 void insert(char *array[], std::size_t capacity)
 {
-    std::size_t len = length(array[capacity - 1]);
     char *value = array[capacity - 1]; 
 
     std::size_t k{};
