@@ -111,11 +111,7 @@ std::size_t is_sorted(char *array[], std::size_t capacity)
 void insert(char *array[], std::size_t capacity)
 {
     std::size_t len = length(array[capacity - 1]);
-    char *value = new char[len + 1];
-    assign(value, array[capacity - 1]);
-
-    // pointer to be deleted later to avoid memory leak
-    char *copy = array[capacity - 1];
+    char *value = array[capacity - 1]; 
 
     std::size_t k{};
     for (k = capacity - 1; (k > 0) && (compare(array[k - 1], value) > 0); --k)
@@ -124,9 +120,6 @@ void insert(char *array[], std::size_t capacity)
     }
 
     array[k] = value;
-
-    delete[] copy;
-    copy = nullptr;
 }
 
 void insertion_sort(char *array[], std::size_t capacity)
