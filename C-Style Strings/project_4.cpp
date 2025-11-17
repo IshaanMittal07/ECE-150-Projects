@@ -183,42 +183,6 @@ std::size_t find(char *array[], std::size_t capacity, char const *str)
     return index;
 }
 
-void read_words_from_file(char const *filename, char **&word_array, std::size_t &num_words, std::size_t max_length)
-{
-    // copied code from main.cpp
-
-    //  Attempt to open the file
-    std::ifstream file{filename};
-    if (!file.is_open())
-    {
-        std::cout << "[ERROR] " << filename << " not found or could not open file" << std::endl;
-    }
-    assert(file.is_open());
-
-    // Read the number of words from the first line of the file
-    file >> num_words;
-
-    // Ignore the newline '\n' character after the number
-    file.ignore();
-
-    /// Allocate memory and initialize the word array
-    word_array = new char *[num_words]{};                // pointers to individual words
-    word_array[0] = new char[num_words * (max_length + 1)]{}; // contiguous list of all words
-
-    for (std::size_t k{1}; k < num_words; ++k)
-    { // connect the individual word pointers
-        word_array[k] = word_array[k - 1] + max_length + 1;
-    }
-
-    // Read from the file into the word array
-    for (std::size_t k{0}; k < num_words; ++k)
-    {
-        file >> word_array[k];
-    }
-
-    file.close();
-}
-
 void free_word_array(char **word_array)
 {
 
