@@ -110,15 +110,19 @@ std::size_t is_sorted(char *array[], std::size_t capacity)
 
 void insert(char *array[], std::size_t capacity)
 {
-    char *value = array[capacity - 1]; 
+    std::size_t len = length(array[capacity - 1]) + 1;
+    char *value = new char[len];
+    assign(value, array[capacity - 1]); 
 
     std::size_t k{};
     for (k = capacity - 1; (k > 0) && (compare(array[k - 1], value) > 0); --k)
     {
-        array[k] = array[k - 1];
+        assign(array[k],array[k - 1]);
     }
 
-    array[k] = value;
+    assign(array[k], value);
+
+    delete[] value;
 }
 
 void insertion_sort(char *array[], std::size_t capacity)
@@ -147,6 +151,7 @@ std::size_t remove_duplicates(char *array[], std::size_t capacity)
             array[unique] = array[k]; // keep on moving to the left
         }
     }
+
 
     return (unique + 1); // its unique + 1 bc of the diff bt index and element
 }
