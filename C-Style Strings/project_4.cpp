@@ -122,7 +122,7 @@ void insert(char *array[], std::size_t capacity)
 
     assign(array[k], value);
 
-    delete[] value;
+    delete[] value; //check if this is necassary with Prof
 }
 
 void insertion_sort(char *array[], std::size_t capacity)
