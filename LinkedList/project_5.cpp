@@ -131,9 +131,16 @@ bool Set::empty() const
     // check if p_head_ is assigned nullptr
     return p_head_ == nullptr;
 }
-std::size_t size() const
+std::size_t Set::size() const
 {
-    return 0;
+    std::size_t list_size{0}; 
+
+    for (Node *p_node{p_head_};
+        p_node != nullptr; p_node = p_node->next()) {
+            ++list_size;
+        }
+    
+    return list_size; 
 }
 Node *find() const
 {
