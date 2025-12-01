@@ -142,10 +142,16 @@ std::size_t Set::size() const
     
     return list_size; 
 }
-Node *find() const
-{
-    return nullptr;
-}
+Node *Set::find(int const &item) const{
+    for ( Node *p_node{ p_head_ }; p_node != nullptr; p_node = p_node->next() ) {
+
+        if (p_node->value() == item) {
+            return p_node; 
+        }
+    }
+    return nullptr; 
+} 
+
 // Any member function that returns a set
 // by reference should return *this;
 // v---- the & indicates a return by reference
