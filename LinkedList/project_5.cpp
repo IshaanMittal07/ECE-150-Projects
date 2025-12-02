@@ -152,6 +152,20 @@ Node *Set::find(int const &item) const{
     return nullptr; 
 } 
 
+std::size_t Set::insert(int const &item)
+{
+    if(find(item) != nullptr) {
+        return 0; 
+    }
+
+    else {
+        p_head_ = new Node(item, p_head_); 
+        return 1; 
+    }
+}
+
+
+
 // Any member function that returns a set
 // by reference should return *this;
 // v---- the & indicates a return by reference
@@ -179,10 +193,6 @@ Set::Set(std::initializer_list<int> inital_values) : p_head_{nullptr}
     }
 }
 
-std::size_t Set::insert(int const &item)
-{
-    return 0;
-}
 
 int main()
 {
