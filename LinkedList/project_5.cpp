@@ -164,6 +164,20 @@ std::size_t Set::insert(int const &item)
     }
 }
 
+void Set::clear() {
+    Node* current = p_head_; 
+    Node* nextNode = nullptr; 
+
+    while (current != nullptr) {
+        nextNode = current->next(); 
+        delete current; 
+        current = nextNode;
+    }
+
+    p_head_ = nullptr; 
+
+}
+
 
 
 // Any member function that returns a set
