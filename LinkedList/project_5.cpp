@@ -1,6 +1,6 @@
 #include <initializer_list>
 #include <iostream>
-#include <cassert>
+//#include <cassert>
 
 // Class declarations
 class Set;
@@ -476,6 +476,7 @@ Set::Set(std::initializer_list<int> inital_values) : p_head_{nullptr}
     }
 }
 
+/*
 int main()
 {
 
@@ -489,4 +490,4 @@ int main()
     assert(my_data_1.find(5)->value() == 5);
     assert(my_data_1.find(6) == nullptr);
     assert(my_data_1.find(8)->value());
-}
+} */
