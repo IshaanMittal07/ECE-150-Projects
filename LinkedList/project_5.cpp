@@ -191,24 +191,282 @@ Set::~Set()
     clear();
 }
 
+Set::Set(Set const &orig) : p_head_{nullptr}
+{ // initlize empty
+
+    for (Node *ptr{orig.p_head_}; ptr != nullptr; ptr = ptr->next())
+    {
+        insert(ptr->value());
+    }
+}
+
+Set::Set(Set &&orig) : p_head_{nullptr}
+{
+    std::swap(p_head_, orig.p_head_);
+}
+
+Set &Set::operator=(Set const &rhs)
+{
+    if (this == &rhs)
+    {
+        return *this;
+    }
+
+    else
+    {
+        clear();
+        for (Node *ptr{rhs.p_head_}; ptr != nullptr; ptr = ptr->next())
+        {
+            insert(ptr->value());
+        }
+    }
+
+    return *this;
+}
+
+Set &Set::operator=(Set &&rhs)
+{
+    std::swap(p_head_, rhs.p_head_);
+    return *this;
+}
+
+std::size_t Set::insert(int const array[], std::size_t const begin, std::size_t const end)
+{
+    std::size_t counter{0};
+
+    for (std::size_t i{begin}; i < end; ++i)
+    {
+        counter += insert(array[i]);
+    }
+
+    return counter;
+}
+
+std::size_t Set::erase(int const &item) //FINISH THIS
+{
+    Node* previous = nullptr; 
+
+    for (Node* current{p_head_}; current != nullptr;) {
+        Node* next = current->next_; 
+
+        if (current->value() == item) {
+            if (previous == nullptr) {
+                p_head_ = next; 
+            }
+
+            else {
+                previous->next_ = next; 
+            }
+
+            delete current; 
+            return 1; 
+        }
+
+        previous = current; 
+        current = next; 
+    }
+
+    return 0; 
+
+}
+
+std::size_t Set::merge(Set &other)
+{
+
+    std::size_t moveCount = 0;
+    Node *previous = nullptr;
+
+    for (Node *current{other.p_head_}; current != nullptr;)
+    {
+
+        Node *next = current->next_;
+        if (find(current->value()) != nullptr)
+        {
+            previous = current;
+        }
+
+        else
+        {
+            if (previous == nullptr)
+            {
+                other.p_head_ = next;
+            }
+
+            else
+            {
+                previous->next_ = next;
+            }
+            current->next_ = p_head_;
+            p_head_ = current;
+            moveCount++;
+        }
+
+        current = next; // go to the next node
+    }
+
+    return moveCount;
+}
+
 // Any member function that returns a set
 // by reference should return *this;
 // v---- the & indicates a return by reference
-Set &Set::operator|=(Set const &other)
+Set &Set::operator|=(Set const &rhs)
 {
+    for (Node *ptr{rhs.p_head_}; ptr != nullptr; ptr = ptr->next_)
+    {
+        insert(ptr->value());
+    }
+
     return *this;
 }
-// Any member function that returns a set
-// not by reference, should have a local
-// variable declared to be a set and then
-// return it.
-// v---- no & indicates a return by value (copy)
-Set Set::operator|(Set const &other) const
+
+Set &Set::operator&=(Set const &rhs)
 {
-    Set result{};
-    return result;
+
+    for (Node *ptr{p_head_}; ptr != nullptr;)
+    { // avoid using the ptr = ptr->next_ to avoid danging memoery
+
+        Node *next = ptr->next_;
+
+        if (rhs.find(ptr->value()) == nullptr)
+        {
+            erase(ptr->value());
+        }
+
+        ptr = next;
+    }
+
+    return *this;
 }
-// added
+
+Set &Set::operator^=(Set const &rhs)
+{
+    for (Node *ptr{rhs.p_head_}; ptr != nullptr; ptr = ptr->next_)
+    {
+        if (find(ptr->value()) != nullptr)
+        {
+            erase(ptr->value());
+        }
+
+        else
+        {
+            insert(ptr->value());
+        }
+    }
+
+    return *this;
+}
+
+Set &Set::operator-=(Set const &rhs)
+{
+    for (Node *ptr{rhs.p_head_}; ptr != nullptr; ptr = ptr->next_)
+    {
+        erase(ptr->value());
+    }
+
+    return *this;
+}
+
+Set Set::operator|(Set const &rhs) const
+{
+    // Create a copy of 'this'.
+    Set tmp{*this};
+    // Make 'tmp' the intersection of
+    // 'tmp' and the right-hand side.
+    tmp |= rhs;
+    // Return the temporary set that is now the
+    // intersection of this and 'rhs'.
+    return tmp;
+}
+
+Set Set::operator&(Set const &rhs) const
+{
+    // Create a copy of 'this'.
+    Set tmp{*this};
+    // Make 'tmp' the intersection of
+    // 'tmp' and the right-hand side.
+    tmp &= rhs;
+    // Return the temporary set that is now the
+    // intersection of this and 'rhs'.
+    return tmp;
+}
+
+Set Set::operator^(Set const &rhs) const
+{
+    // Create a copy of 'this'.
+    Set tmp{*this};
+    // Make 'tmp' the intersection of
+    // 'tmp' and the right-hand side.
+    tmp ^= rhs;
+    // Return the temporary set that is now the
+    // intersection of this and 'rhs'.
+    return tmp;
+}
+
+Set Set::operator-(Set const &rhs) const
+{
+    // Create a copy of 'this'.
+    Set tmp{*this};
+    // Make 'tmp' the intersection of
+    // 'tmp' and the right-hand side.
+    tmp -= rhs;
+    // Return the temporary set that is now the
+    // intersection of this and 'rhs'.
+    return tmp;
+}
+
+
+bool Set::operator>=(Set const &rhs) const {
+    for (Node* ptr{rhs.p_head_}; ptr != nullptr; ptr = ptr->next_) {
+        if (find(ptr->value()) == nullptr) {
+            return false; 
+        }
+    }
+
+    return true; 
+}
+
+bool Set::operator>(Set const &rhs) const { 
+    if ((*this >= rhs) && (size() > rhs.size())) {
+        return true; 
+    }
+
+    return false; 
+}
+
+bool Set::operator<=(Set const &rhs) const { 
+    if (rhs >= *this) {
+        return true; 
+    }
+
+    return false; 
+}
+
+bool Set::operator<(Set const &rhs) const { 
+    if (rhs > *this) {
+        return true; 
+    }
+
+    return false; 
+}
+
+
+bool Set::operator==(Set const &rhs) const {  
+    if ((*this >= rhs) && (rhs >= *this)) {
+        return true; 
+    }
+
+    return false; 
+}
+
+bool Set::operator!=(Set const &rhs) const {  
+    if (!((*this >= rhs) && (rhs >= *this))) {
+        return true; 
+    }
+
+    return false; 
+}
+
 
 Set::Set(std::initializer_list<int> inital_values) : p_head_{nullptr}
 {
