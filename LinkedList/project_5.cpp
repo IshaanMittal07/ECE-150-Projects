@@ -1,5 +1,6 @@
 #include <initializer_list>
 #include <iostream>
+#include <cassert>
 
 // Class declarations
 class Set;
@@ -13,7 +14,7 @@ class Set
 public:
     // This is new and will be clearly explained
     Set(std::initializer_list<int> initial_values);
-    ~Set(); 
+    ~Set();
     // The instructions will describe exactly what to do
     Set(Set const &orig);
     Set(Set &&orig);
@@ -52,10 +53,10 @@ public:
     // in both sets, in both sets.
     std::size_t merge(Set &other);
     // Set operations (Automatic Assigment)
-    Set &operator|=(Set const &other);   // union
-    Set &operator&=(Set const &other);   // intersection
+    Set &operator|=(Set const &other); // union
+    Set &operator&=(Set const &other); // intersection
     Set &operator^=(Set const &other); // symmetric difference
-    Set &operator-=(Set const &other);   // minus
+    Set &operator-=(Set const &other); // minus
     // Set operations (Binary)
     Set operator|(Set const &other) const; // union
     Set operator&(Set const &other) const; // intersection
@@ -77,9 +78,8 @@ public:
 
 private:
     Node *p_head_;
-    
-friend std::ostream &operator<<(std::ostream &out, Set const &rhs);
 
+    friend std::ostream &operator<<(std::ostream &out, Set const &rhs);
 };
 
 class Node
@@ -106,8 +106,9 @@ int Node::value() const
     return value_;
 }
 
-Node *Node::next() const { 
-    return next_; 
+Node *Node::next() const
+{
+    return next_;
 }
 
 std::ostream &operator<<(std::ostream &out, Set const &rhs)
@@ -133,57 +134,67 @@ bool Set::empty() const
 }
 std::size_t Set::size() const
 {
-    std::size_t list_size{0}; 
+    std::size_t list_size{0};
 
     for (Node *p_node{p_head_};
-        p_node != nullptr; p_node = p_node->next()) {
-            ++list_size;
-        }
-    
-    return list_size; 
-}
-Node *Set::find(int const &item) const{
-    for ( Node *p_node{ p_head_ }; p_node != nullptr; p_node = p_node->next() ) {
+         p_node != nullptr; p_node = p_node->next())
+    {
+        ++list_size;
+    }
 
-        if (p_node->value() == item) {
-            return p_node; 
+    return list_size;
+}
+Node *Set::find(int const &item) const
+{
+    for (Node *p_node{p_head_}; p_node != nullptr; p_node = p_node->next())
+    {
+
+        if (p_node->value() == item)
+        {
+            return p_node;
         }
     }
-    return nullptr; 
-} 
+    return nullptr;
+}
 
 std::size_t Set::insert(int const &item)
 {
-    if(find(item) != nullptr) {
-        return 0; 
+    if (find(item) != nullptr)
+    {
+        return 0;
     }
 
-    else {
-        p_head_ = new Node(item, p_head_); 
-        return 1; 
+    else
+    {
+        p_head_ = new Node(item, p_head_);
+        return 1;
     }
 }
 
-void Set::clear() {
-    Node* current = p_head_; 
-    Node* nextNode = nullptr; 
+void Set::clear()
+{
+    Node *current = p_head_;
+    Node *nextNode = nullptr;
 
-    while (current != nullptr) {
-        nextNode = current->next(); 
-        delete current; 
+    while (current != nullptr)
+    {
+        nextNode = current->next();
+        delete current;
         current = nextNode;
     }
 
-    p_head_ = nullptr; 
-
+    p_head_ = nullptr;
 }
 
-
+Set::~Set()
+{
+    clear();
+}
 
 // Any member function that returns a set
 // by reference should return *this;
 // v---- the & indicates a return by reference
-Set &Set::operator|=(Set const &other) const
+Set &Set::operator|=(Set const &other)
 {
     return *this;
 }
@@ -207,11 +218,17 @@ Set::Set(std::initializer_list<int> inital_values) : p_head_{nullptr}
     }
 }
 
-
 int main()
 {
 
-    Set my_set{3, 5, 9};
-    std::cout << my_set.empty() << std::endl;
-    return 0;
+    Set my_data_1{1, 3, 5, 2, 4, 8, 5, 3, 1};
+    // This should print '6'
+    std::cout << my_data_1.size() << std::endl;
+    // This should print '0' ('false')
+    std::cout << my_data_1.empty() << std::endl;
+    assert(my_data_1.find(0) == nullptr);
+    assert(my_data_1.find(1)->value() == 1);
+    assert(my_data_1.find(5)->value() == 5);
+    assert(my_data_1.find(6) == nullptr);
+    assert(my_data_1.find(8)->value());
 }
